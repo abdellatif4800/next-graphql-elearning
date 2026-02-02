@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+@import "flowbite-react/plugin/tailwindcss";
+
+@source "../.flowbite-react/class-list.json";
+
+@plugin "flowbite/plugin";
+
+@source "../node_modules/flowbite";
+
+/* =========================================
+   1. CSS VARIABLES (THEME DEFINITIONS)
+   ========================================= */
+
+/* --- DARK MODE (Default) --- */
+:root {
+  /* Brand Accents (Vibrant Neons) */
+  --teal-glow: #2dd4bf;    /* teal-400 */
+  --emerald-glow: #10b981; /* emerald-500 */
+  --purple-glow: #a855f7;  /* purple-500 */
+
+  /* Surface Colors (Deep Dark) */
+  --surface-950: #050505;  /* Main Background */
+  --surface-900: #0f1115;  /* Card / Panel Background */
+  --surface-800: #1a1d23;  /* Borders / Secondary elements */
+  --surface-700: #262a33;  /* Hover states / Scrollbar thumbs */
+
+  /* Text Colors */
+  --text-primary: #d1d5db; /* gray-300 */
+  --text-secondary: #9ca3af; /* gray-400 */
+  --text-inverse: #000000;
+
+  color-scheme: dark;
+}
+
+/* --- LIGHT MODE (Applied when <html class="light">) --- */
+.light {
+  /* Brand Accents (Darkened for visibility on white) */
+  --teal-glow: #0d9488;    /* teal-600 */
+  --emerald-glow: #059669; /* emerald-600 */
+  --purple-glow: #7e22ce;  /* purple-700 */
+
+  /* Surface Colors (Clean Light) */
+  --surface-950: #ffffff;  /* Pure White Background */
+  --surface-900: #f3f4f6;  /* Light Gray Panel */
+  --surface-800: #e5e7eb;  /* Light Borders */
+  --surface-700: #d1d5db;  /* Darker Gray Hovers */
+
+  --text-primary: #111827; /* gray-900 */
+  --text-secondary: #4b5563; /* FIXED: Was #4b556 */
+  --text-inverse: #ffffff;
+
+  color-scheme: light;
+}
+
+/* =========================================
+   2. TAILWIND v4 THEME CONFIGURATION
+   ========================================= */
+@theme {
+  /* Map Tailwind utilities to our CSS Variables */
+  --color-teal-glow: var(--teal-glow);
+  --color-emerald-glow: var(--emerald-glow);
+  --color-purple-glow: var(--purple-glow);
+
+  --color-surface-950: var(--surface-950);
+  --color-surface-900: var(--surface-900);
+  --color-surface-800: var(--surface-800);
+  --color-surface-700: var(--surface-700);
+
+  /* Fonts */
+  --font-digital: "Orbitron", sans-serif;
+  --font-terminal: "JetBrains Mono", "Fira Code", monospace;
+
+  /* Border Radius Override */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+}
+
+/* =========================================
+   3. GLOBAL RESETS & BASE STYLES
+   ========================================= */
+
+/* Force 0px Border Radius Globally */
+* {
+  border-radius: 0px !important;
+}
+
+body {
+  background-color: var(--surface-950);
+  color: var(--text-primary);
+  font-family: var(--font-terminal);
+  @apply antialiased transition-colors duration-300;
+}
+
+/* Digital Font & Brand Color for Headings */
+h1, h2, h3, .brand-logo {
+  font-family: var(--font-digital);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   4. COMPONENT CLASSES
+   ========================================= */
+
+@layer components {
+  /* Standard Card (Used in Grids) */
+  .lms-card {
+    @apply bg-surface-900 border border-surface-800 hover:border-teal-glow transition-all duration-200 relative;
+    box-shadow: 4px 4px 0px var(--surface-800);
+  }
+
+  /* Primary Action Button (Emerald) */
+  .btn-primary {
+    @apply bg-emerald-glow text-black font-bold px-4 py-2 uppercase tracking-wider
+           hover:bg-white transition-all active:translate-x-[2px] active:translate-y-[2px];
+    box-shadow: 4px 4px 0px var(--surface-700);
+  }
+
+  /* Secondary Action Button (Outline) */
+  .btn-outline {
+    @apply bg-transparent border border-surface-700 text-teal-glow 
+           hover:border-teal-glow hover:text-white transition-colors;
+  }
+}
+
+/* =========================================
+   5. UTILITY CLASSES
+   ========================================= */
+
+@layer utilities {
+  /* Text Glow Effects */
+  .text-glow-teal {
+    text-shadow: 0 0 10px rgba(45, 212, 191, 0.5);
+  }
+  .text-glow-purple {
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+  }
+
+  /* Custom Scrollbar (Terminal Style) */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: var(--surface-950);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--surface-800);
+    border: 1px solid var(--surface-950);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--teal-glow);
+  }
+
+  /* Optional: CRT Scanline Effect Overlay */
+  .scanline-overlay {
+    background: linear-gradient(
+      rgba(18, 16, 16, 0) 50%,
+      rgba(0, 0, 0, 0.1) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+  }
+}

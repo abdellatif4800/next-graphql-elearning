@@ -1,0 +1,36 @@
+{
+  "name": "@repo/gql",
+  "version": "0.0.0",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./styles.css": "./src/styles.css"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build:gql": "tsc",
+    "check-types": "tsc --noEmit",
+    "dev:gql": "tsc --watch",
+    "lint": "eslint src --max-warnings 0"
+  },
+  "peerDependencies": {
+    "@apollo/client": "^4.1.2",
+    "react": "^19"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tailwind-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/cli": "^4.1.5",
+    "@types/node": "^25.0.10",
+    "@types/react": "^19.1.0",
+    "eslint": "^9.39.1",
+    "tailwindcss": "^4.1.5",
+    "typescript": "5.9.2"
+  }
+}

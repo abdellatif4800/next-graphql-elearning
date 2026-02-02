@@ -1,0 +1,18 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["build:gql"]
+    },
+    "build:gql": {
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "with": ["dev:gql"]
+    },
+    "dev:gql": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

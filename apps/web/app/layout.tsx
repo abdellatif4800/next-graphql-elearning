@@ -1,8 +1,10 @@
-import type { Metadata } from "next";
+import '@repo/ui/styles.css';
 import "./globals.css";
-import { MainLayout } from "./components/layout/MainLayout";
+import type { Metadata } from "next";
+import { MainLayout } from "./layout/MainLayout";
 import { ThemeProvider } from "next-themes";
-
+import { TanstackProvider } from "@repo/gql";
+import { WebStoreProvider } from "@repo/reduxSetup";
 
 export const metadata: Metadata = {
   title: "DevDocs_Terminal",
@@ -19,10 +21,22 @@ export default function RootLayout({
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark">
 
-          <MainLayout>
+          <WebStoreProvider>
 
-            {children}
-          </MainLayout>
+            <TanstackProvider>
+
+              <MainLayout>
+
+
+                {children}
+
+
+              </MainLayout>
+
+            </TanstackProvider>
+
+
+          </WebStoreProvider>
 
         </ThemeProvider>
       </body>

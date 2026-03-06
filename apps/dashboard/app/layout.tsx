@@ -1,9 +1,13 @@
+import '@repo/ui/styles.css';
+
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import AdminLayout from "./layout/MainLayout";
-
+import { TanstackProvider } from "@repo/gql";
+import { DashboardStoreProvider } from "@repo/reduxSetup";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,10 +25,19 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
 
-          <AdminLayout>
+          <DashboardStoreProvider>
 
-            {children}
-          </AdminLayout>
+            <TanstackProvider>
+
+              <AdminLayout>
+
+                {children}
+
+              </AdminLayout>
+
+            </TanstackProvider>
+
+          </DashboardStoreProvider>
 
         </ThemeProvider>
 

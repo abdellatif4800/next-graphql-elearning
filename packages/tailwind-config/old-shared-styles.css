@@ -1,0 +1,417 @@
+@import "tailwindcss";
+@import "flowbite-react/plugin/tailwindcss";
+
+@source "../.flowbite-react/class-list.json";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+
+@plugin "@tailwindcss/typography";
+/* ========================================= 
+    1. CSS VARIABLES (THEME DEFINITIONS) 
+========================================= */
+
+/* --- DARK MODE (Default) --- */
+:root {
+  --teal-glow: #2dd4bf;
+  --emerald-glow: #10b981;
+  --purple-glow: #a855f7;
+
+  --surface-950: #050505;
+  --surface-900: #0f1115;
+  --surface-800: #1a1d23;
+  --surface-700: #262a33;
+
+  --text-primary: #d1d5db;
+  --text-secondary: #9ca3af;
+  --text-inverse: #000000;
+
+  color-scheme: dark;
+}
+
+
+/* --- LIGHT MODE --- */
+.light {
+  --teal-glow: #0d9488;
+  --emerald-glow: #059669;
+  --purple-glow: #7e22ce;
+
+  --surface-950: #ffffff;
+  --surface-900: #f3f4f6;
+  --surface-800: #e5e7eb;
+  --surface-700: #d1d5db;
+
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-inverse: #ffffff;
+
+  color-scheme: light;
+}
+
+/* ========================================= 
+    2. TAILWIND v4 THEME CONFIGURATION 
+    ========================================= */
+@theme {
+  --color-teal-glow: var(--teal-glow);
+  --color-emerald-glow: var(--emerald-glow);
+  --color-purple-glow: var(--purple-glow);
+
+  --color-surface-950: var(--surface-950);
+  --color-surface-900: var(--surface-900);
+  --color-surface-800: var(--surface-800);
+  --color-surface-700: var(--surface-700);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-inverse: var(--text-inverse);
+
+  --font-digital: "Orbitron", sans-serif;
+  --font-terminal: "JetBrains Mono", "Fira Code", monospace;
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+}
+
+
+
+
+
+
+
+/* ========================================= 
+    3. GLOBAL RESETS & BASE STYLES 
+    ========================================= */
+
+* {
+  border-radius: 0px !important;
+}
+
+body {
+  background-color: var(--surface-950);
+  color: var(--text-primary);
+  font-family: var(--font-terminal);
+  @apply antialiased transition-colors duration-300;
+}
+
+h1,
+h2,
+h3,
+.brand-logo {
+  font-family: var(--font-digital);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ========================================= 
+    4. COMPONENT CLASSES 
+    ========================================= */
+
+@layer components {
+  .lms-card {
+    @apply bg-surface-900 border border-surface-800 hover:border-teal-glow transition-all duration-200 relative;
+    box-shadow: 4px 4px 0px var(--surface-800);
+  }
+
+  .btn-primary {
+    @apply bg-emerald-glow text-black font-bold px-4 py-2 uppercase tracking-wider 
+             hover:bg-white transition-all active:translate-x-[2px] active:translate-y-[2px];
+    box-shadow: 4px 4px 0px var(--surface-700);
+  }
+
+  .btn-outline {
+    @apply bg-transparent border border-surface-700 text-teal-glow 
+             hover:border-teal-glow hover:text-white transition-colors;
+  }
+/* ========================================= 
+   MDX EDITOR CONTENT THEME (.mdxContent)
+   ========================================= */
+
+
+.mdxContent {
+  /* Base Settings */
+  font-family: var(--font-terminal);
+  color: var(--text-primary);
+  line-height: 1.75;
+  font-size: 1rem;
+  caret-color: var(--teal-glow);
+
+}
+
+/* --- HEADINGS --- */
+.mdxContent h1,
+.mdxContent h2,
+.mdxContent h3,
+.mdxContent h4 {
+  font-family: var(--font-digital);
+  color: var(--teal-glow);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.mdxContent h1 {
+  font-size: 2.25rem; /* 36px */
+  border-left: 5px solid var(--purple-glow);
+  padding-left: 20px;
+
+}
+
+.mdxContent h2 {
+  font-size: 1.75rem; /* 28px */
+  color: var(--text-secondary); 
+}
+
+.mdxContent h3 {
+  font-size: 1.5rem; /* 24px */
+  color: var(--purple-glow);
+}
+
+/* --- PARAGRAPHS & TEXT --- */
+.mdxContent p {
+  margin-bottom: 1.25rem;
+  color: var(--text-secondary);
+    font-size:20px
+}
+
+.mdxContent strong {
+  color: var(--text-primary);
+  font-weight: 700;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.mdxContent em {
+  color: var(--purple-glow);
+  font-style: italic;
+}
+
+/* --- LINKS --- */
+.mdxContent a {
+  color: var(--emerald-glow);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--emerald-glow);
+  transition: all 0.2s ease;
+}
+
+.mdxContent a:hover {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #fff;
+  border-bottom-style: solid;
+}
+
+
+/* --- LISTS --- */
+.mdxContent ul {
+  list-style: none;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.mdxContent ui {
+  color: red;
+
+  }
+.mdxContent ul li::before {
+  content: ">"; 
+  color: var(--teal-glow);
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+.mdxContent ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--purple-glow); /* Number color */
+}
+
+.mdxContent ol li {
+  color: var(--text-secondary); /* Text color */
+  padding-left: 0.5rem;
+}
+
+/* --- BLOCKQUOTES --- */
+.mdxContent blockquote {
+  border-left: 4px solid var(--purple-glow);
+  background-color: var(--surface-900);
+  padding: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--text-primary);
+  box-shadow: 4px 4px 0px var(--surface-800);
+}
+
+/* --- CODE BLOCKS --- */
+.mdxContent pre {
+  background-color: var(--surface-900) !important;  
+  border: 1px solid var(--surface-800);
+  padding: 1rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  
+  /* Optional: Add an inset shadow to make it look "sunken" like a terminal */
+  box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.mdxContent code {
+  font-family: var(--font-terminal);
+  
+  /* Inline code background (keep slightly lighter/different from block) */
+  background-color: var(--surface-800); 
+  
+  color: var(--teal-glow);
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+}
+
+.mdxContent pre code {
+  /* Reset inline styles for block code */
+  background-color: transparent;
+  color: inherit; /* Or force a color like var(--text-primary) */
+  padding: 0;
+  border: none;
+}
+
+/* --- HORIZONTAL RULE --- */
+.mdxContent hr {
+  border: 0;
+  height: 1px;
+  background: var(--surface-700);
+  margin: 2rem 0;
+  position: relative;
+}
+
+.mdxContent hr::after {
+  content: " ";
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: var(--teal-glow);
+  position: absolute;
+  top: -1px;
+  left: 0;
+}
+
+
+
+
+
+.mdxContent {
+  /* Base Settings */
+  font-family: var(--font-terminal);
+  color: var(--text-primary);
+  line-height: 1.75;
+  font-size: 1rem;
+}
+
+.mdxContent strong {
+  font-weight: 600;
+}
+
+.mdxeditor-toolbar{
+    background-color:red
+}
+
+.mdxeditor-popup {
+  z-index: 9999 !important;
+}
+.mdxeditor-root-contenteditable {
+  overflow: visible !important;
+}
+
+  .mdxeditor-popup-container, 
+[role="dialog"], 
+[data-radix-popper-content-wrapper] {
+  z-index: 99999 !important;
+}
+
+.mdxeditor-popup {
+  z-index: 9999 !important;
+}
+.mdxeditor-root-contenteditable {
+  overflow: visible !important;
+}
+
+  .mdxeditor-popup-container, 
+[role="dialog"], 
+[data-radix-popper-content-wrapper] {
+  z-index: 99999 !important;
+}
+
+
+
+/* Fix the styling of the Generic JSX Editor to match your dark theme */
+div[class*="genericJsxEditor"] {
+  background-color: #0a0a0a !important; /* surface-950 */
+  border: 1px solid #1e293b !important; /* surface-800 */
+  color: white !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+/* Ensure the attribute table inside the popup is visible */
+div[class*="genericJsxEditor"] table {
+  color: #94a3b8; /* text-secondary */
+z-index: 99999 !important; /* Higher than your z-1000 container */
+  background-color: var(--surface-900);
+  border: 1px solid var(--teal-glow);
+  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  /* Ensure it doesn't get squashed width-wise */
+  min-width: 300px;
+}
+
+div[class*="genericJsxEditor"] input {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: white;
+  padding: 2px 4px;
+}
+
+}
+
+/* ========================================= 
+    5. UTILITY CLASSES 
+    ========================================= */
+
+@layer utilities {
+  .text-glow-teal {
+    text-shadow: 0 0 10px rgba(45, 212, 191, 0.5);
+  }
+
+  .text-glow-purple {
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: var(--surface-950);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--surface-800);
+    border: 1px solid var(--surface-950);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--teal-glow);
+  }
+
+  .scanline-overlay {
+    background: linear-gradient(
+      rgba(18, 16, 16, 0) 50%,
+      rgba(0, 0, 0, 0.1) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+  }
+}

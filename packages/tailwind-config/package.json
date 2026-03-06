@@ -7,13 +7,13 @@
     ".": "./shared-styles.css",
     "./postcss": "./postcss.config.js"
   },
-  "devDependencies": {
-    "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.5"
+ "devDependencies": {
+    "postcss": "^8.5.3"
   },
-  "dependencies": {
+  "peerDependencies": {
+    "tailwindcss": "*",
+    "@tailwindcss/typography": "^0.5.19",
     "flowbite": "^4.0.1",
     "flowbite-react": "^0.12.16"
-
   }
 }

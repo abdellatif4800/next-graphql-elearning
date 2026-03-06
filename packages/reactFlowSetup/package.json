@@ -1,0 +1,36 @@
+{
+  "name": "@repo/reactFlowSetup",
+  "version": "0.0.0",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./styles.css": "./src/styles.css"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build:reactFlowSetup": "tsc",
+    "check-types": "tsc --noEmit",
+    "dev:reactFlowSetup": "tsc --watch",
+    "lint": "eslint src --max-warnings 0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "@mdxeditor/editor": "^3.52.3",
+    "@repo/gql": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@repo/reduxSetup": "workspace:*",
+    "@xyflow/react": "^12.10.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "*",
+    "@types/react": "*",
+    "typescript": "*"
+  }
+}

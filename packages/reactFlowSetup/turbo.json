@@ -1,0 +1,18 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["build:reactFlowSetup"]
+    },
+    "build:reactFlowSetup": {
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "with": ["dev:reactFlowSetup"]
+    },
+    "dev:reactFlowSetup": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

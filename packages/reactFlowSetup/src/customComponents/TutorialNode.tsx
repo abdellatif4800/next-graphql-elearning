@@ -1,7 +1,8 @@
-import { Handle, NodeProps, Position } from '@xyflow/react';
+import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import { useRouter } from "next/navigation";
 
-interface SimpleTutorialNodeData {
+// 1. Extend Record<string, unknown> to satisfy XYFlow's strict data constraints
+export interface SimpleTutorialNodeData extends Record<string, unknown> {
   tutorial: {
     id: string;
     tutorialName: string;
@@ -11,7 +12,10 @@ interface SimpleTutorialNodeData {
   };
 }
 
-export function TutorialNode({ data, selected }: NodeProps<SimpleTutorialNodeData>) {
+// 2. Create a complete Node type that combines your custom data with standard Node properties
+export type CustomTutorialNode = Node<SimpleTutorialNodeData, 'tutorial'>;
+
+export function TutorialNode({ data, selected }: NodeProps<CustomTutorialNode>) {
   const tutorial = data.tutorial;
   const router = useRouter();
 
@@ -122,54 +126,3 @@ export function TutorialNode({ data, selected }: NodeProps<SimpleTutorialNodeDat
     </div>
   );
 }
-
-// import { Handle, NodeProps, Position } from '@xyflow/react';
-// import { useRouter } from "next/navigation";
-//
-// interface SimpleTutorialNodeData {
-//   tutorial: {
-//     id: string;
-//     tutorialName: string;
-//     level?: string;
-//     description?: string;
-//     category?: string
-//   };
-// }
-//
-// export function TutorialNode({ data }: NodeProps<SimpleTutorialNodeData>) {
-//   const tutorial = data.tutorial;
-//   const router = useRouter();
-//
-//   return (
-//     <div
-//       className="w-[400px] h-[150px] p-2 flex flex-col justify-between bg-surface-900 border border-surface-800 rounded shadow-sm text-text-primary"
-//       style={{ boxShadow: '2px 2px 0px var(--surface-800)' }}
-//       onClick={() => {
-//         router.push(`/tutorials/${tutorial.id}`);
-//       }}
-//     >
-//       <div>
-//         <h3 className="text-xs font-bold uppercase line-clamp-2">{tutorial.tutorialName}</h3>
-//         <p className="text-[9px] text-secondary mt-1">
-//           Level: {tutorial.level || 'CORE'}
-//         </p>
-//       </div>
-//
-//       <p className="text-xs font-medium text-secondary leading-relaxed mb-2 line-clamp-2 italic flex-1">
-//         {">"} {tutorial.description}
-//       </p>
-//
-//
-//       <div className="mb-2">
-//         <span className="inline-block text-[8px] font-bold text-purple-glow bg-purple-glow/10 border border-purple-glow/20 px-1.5 py-0.5 uppercase tracking-wider rounded-none">
-//           {tutorial.category}
-//         </span>
-//       </div>
-//
-//
-//       {/* React Flow Handles */}
-//       <Handle type="source" position={Position.Top} id="top" />
-//       <Handle type="target" position={Position.Bottom} id="bottom" />
-//     </div>
-//   );
-// }

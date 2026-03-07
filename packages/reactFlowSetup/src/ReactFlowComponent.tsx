@@ -1,10 +1,25 @@
 "use client"
 
 import { useState, useCallback } from 'react';
-import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background, BackgroundVariant, MiniMap, Panel, Controls, BaseEdge, getStraightPath, Edge, StepEdge } from '@xyflow/react';
+import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background, BackgroundVariant, MiniMap, Panel, Controls, BaseEdge, getStraightPath, type Edge, type Node, StepEdge } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { TutorialNode } from './customComponents/TutorialNode';
-import { setCurrentNode, updateNode, useDispatch } from '@repo/reduxSetup';
+
+// 1. Alias the Redux addEdge so it doesn't conflict with XYFlow's addEdge
+import { setCurrentNode, updateNode, useDispatch, addEdge as reduxAddEdge } from '@repo/reduxSetup';
+
+// 2. Define nodeTypes OUTSIDE the component to prevent re-renders, and bypass the strict type check
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const nodeTypes: any = { tutorial: TutorialNode };
+
+// Define edgeTypes outside as well for the same performance reasons
+const edgeTypes = {
+  step: StepEdge,
+};
+
+const defaultEdgeOptions = {
+  type: 'step',
+};
 
 interface ReactFlowComponentProps {
   nodes: Node[];
@@ -13,7 +28,6 @@ interface ReactFlowComponentProps {
   setEdges?: React.Dispatch<React.SetStateAction<Edge[]>>;
   isEditable?: boolean; // optional flag for view mode
 }
-
 
 export function ReactFlowComponent(
   { nodes, edges, setNodes, setEdges, isEditable }: ReactFlowComponentProps
@@ -66,7 +80,8 @@ export function ReactFlowComponent(
         const addedEdge = newEdges.find(
           e => !prevEdges.some(pe => pe.id === e.id)
         );
-        if (addedEdge) dispatch(addEdge(addedEdge));
+        // Use the aliased redux action here!
+        if (addedEdge) dispatch(reduxAddEdge(addedEdge));
         return newEdges;
       });
     },
@@ -77,20 +92,12 @@ export function ReactFlowComponent(
     dispatch(setCurrentNode(node));
   };
 
-  const edgeTypes = {
-    step: StepEdge,
-  };
-
-  const defaultEdgeOptions = {
-    type: 'step', // This matches the key in edgeTypes
-  };
-
   return (
     <div className='h-full w-full'>
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        nodeTypes={{ tutorial: TutorialNode }}
+        nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={isEditable ? onConnect : undefined}
@@ -100,7 +107,6 @@ export function ReactFlowComponent(
         elementsSelectable={isEditable}
         defaultEdgeOptions={defaultEdgeOptions}
         edgeTypes={edgeTypes}
-
         fitView
       >
         <Background color="#ccc" variant={BackgroundVariant.Dots} />

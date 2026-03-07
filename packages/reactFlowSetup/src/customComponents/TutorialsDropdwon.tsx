@@ -4,20 +4,37 @@ import { useDispatch } from "@repo/reduxSetup";
 import { addTutorialNode } from "@repo/reduxSetup";
 import { getTutorials, useQuery } from "@repo/gql";
 
+// 1. Define the shape of your tutorial data
+export interface Tutorial {
+  id: string;
+  tutorialName: string;
+  level?: string;
+  description?: string;
+  category?: string;
+}
 
 export function TutorialDropdown() {
   const dispatch = useDispatch();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
 
-  const { data: tutorials = [], isLoading } = useQuery({
+  // 2. Tell useQuery what type of data to expect
+  const { data, isLoading } = useQuery({
     queryKey: ['tutorials', query],
-    queryFn: () => getTutorials({ tutorialName: query, publish: true }),
-    keepPreviousData: true,
+    // Cast the response so TypeScript knows it's an array of Tutorials
+    queryFn: async () => {
+      const response = await getTutorials({ tutorialName: query, publish: true });
+      return response as Tutorial[];
+    },
+    // 3. The React Query v5 way to keep previous data
+    placeholderData: (previousData) => previousData,
   });
 
+  // Default to an empty array to map over safely
+  const tutorials: Tutorial[] = data || [];
+
   const handleSelect = (tutorialId: string) => {
-    const tutorial = tutorials.find(t => t.id === tutorialId);
+    const tutorial = tutorials.find((t) => t.id === tutorialId);
     if (!tutorial) return;
 
     dispatch(addTutorialNode({

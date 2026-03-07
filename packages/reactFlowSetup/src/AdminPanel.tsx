@@ -1,5 +1,5 @@
 'use client'
-import { Node, Edge } from "reactflow";
+import { type Node, type Edge } from "@xyflow/react";
 import { useDispatch, useSelector, RootState } from "@repo/reduxSetup";
 import {
   addNode,

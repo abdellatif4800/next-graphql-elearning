@@ -1,15 +1,13 @@
-import { BaseEdge } from '@xyflow/react';
+import { BaseEdge, type EdgeProps } from '@xyflow/react';
 
-export function StepEdge({ id, sourceX, sourceY, targetX, targetY }) {
+export function StepEdge({ id, sourceX, sourceY, targetX, targetY }: EdgeProps) {
   const centerY = (targetY - sourceY) / 2 + sourceY;
-
   const edgePath = `M ${sourceX} ${sourceY} L ${sourceX} ${centerY} L ${targetX} ${centerY} L ${targetX} ${targetY}`;
 
   return <BaseEdge id={id} path={edgePath} />;
 }
 
-
-export function SineEdge({ id, sourceX, sourceY, targetX, targetY }) {
+export function SineEdge({ id, sourceX, sourceY, targetX, targetY }: EdgeProps) {
   const centerX = (targetX - sourceX) / 2 + sourceX;
   const centerY = (targetY - sourceY) / 2 + sourceY;
 

@@ -1,6 +1,5 @@
 "use client"
 import dynamic from 'next/dynamic';
-import { TipTapLeasonViewer } from '@repo/ui';
 import { getUnitById, useQuery } from '@repo/gql';
 import { ImageComponent, SimpleSeparator } from '@repo/mdxSetup';
 import { useEffect, useState } from 'react';

@@ -1,6 +1,6 @@
 "use client"
 
-import { CreateProgressInput, createUnitProgress, getAllUnitProgressByTutorialAndUser, useMutation, useQuery, useQueryClient } from '@repo/gql';
+import { CreateProgressInput, createUnitProgress, getAllUnitProgressByTutorialAndUser, getUnitsByTutorialId, useMutation, useQuery, useQueryClient } from '@repo/gql';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -14,7 +14,7 @@ export function UnitsList({ firstUnit }: { firstUnit?: string }) {
   const params = useParams();
   const searchParams = useSearchParams();
 
-  const tutorialId = params.tutorialId;
+  const tutorialId = params.tutorialId as string;
   const unitIdParam = searchParams.get("unitId");
   const currentUnitId = unitIdParam || firstUnit;
 
@@ -32,7 +32,7 @@ export function UnitsList({ firstUnit }: { firstUnit?: string }) {
     mutationFn: (input: CreateProgressInput) => createUnitProgress(input),
     onSuccess: (data) => {
       console.log("Success:", data);
-      queryClient.invalidateQueries(['unitProgress', userId, tutorialId]);
+      queryClient.invalidateQueries({ queryKey: ['unitProgress', userId, tutorialId] });
     },
     onError: (err) => {
       console.error("Error saving:", err);

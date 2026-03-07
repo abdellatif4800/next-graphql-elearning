@@ -11,7 +11,7 @@ import {
   useQuery,
 } from "@repo/gql";
 import { RootState, useAppSelector } from "@repo/reduxSetup";
-import { ForwardRefEditor, MDXEditor, MDXEditorMethods } from "@repo/mdxSetup";
+import { ForwardRefEditor, type MDXEditorMethods } from "@repo/mdxSetup";
 import { useRouter } from "next/navigation";
 
 export function CreateTutorialPage({ tutorialId }: { tutorialId?: string }) {
@@ -43,7 +43,7 @@ export function CreateTutorialPage({ tutorialId }: { tutorialId?: string }) {
 
   const [units, setUnits] = useState<
     { id: string, unitTitle: string; order: number; content: string; publish: boolean }[]
-  >(tutorialData?.units.map(u => ({
+  >(tutorialData?.units.map((u: any) => ({
     id: u.id, // <--- include id
     unitTitle: u.unitTitle,
     order: u.order,

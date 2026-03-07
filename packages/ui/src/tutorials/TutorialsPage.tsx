@@ -8,11 +8,10 @@ import { setIsPublic, useAppDispatch } from "@repo/reduxSetup";
 import TutorialsListLoading from "./TutorialsListLoading";
 import TutorialsListError from "./TutorialsListError";
 
-const DEFAULT_FILTERS = { publish: true };
+const DEFAULT_FILTERS: Record<string, any> = { publish: true };
 const ITEMS_PER_BATCH = 8;
 
 function cleanFilters(raw: Record<string, any>) {
-  // FIX: __showAll sentinel means admin wants to see everything — no publish filter
   const showAll = raw.__showAll === true;
 
   const cleaned = Object.fromEntries(

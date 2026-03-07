@@ -1,8 +1,9 @@
 "use client"
 import { getRoadmap, useQuery } from '@repo/gql';
-import { Edge, Node, AdminPanel, ReactFlowComponent } from '@repo/reactFlowSetup'
+import { AdminPanel, ReactFlowComponent } from '@repo/reactFlowSetup'
 import { RootState, setEdges, updateNode, useDispatch, useSelector } from '@repo/reduxSetup';
 import { useEffect, useState } from 'react';
+import { type Edge, type Node } from '@xyflow/react';
 
 export function RoadmapViewPage({ roadmapId }: { roadmapId: string }) {
   const { data: roadmap, isLoading, isError } = useQuery({

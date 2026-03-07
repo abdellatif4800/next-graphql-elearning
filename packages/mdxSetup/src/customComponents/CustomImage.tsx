@@ -280,8 +280,33 @@ export const ImageComponentEditor = ({ mdastNode }: JsxEditorProps) => {
       });
     }
 
-    updateMdastNode({ ...mdastNode, attributes: newAttributes });
+    // Fix: cast to 'any' to bypass strict AST union inference limits
+    updateMdastNode({ ...mdastNode, attributes: newAttributes } as any);
   }, [src, alt, caption]);
+
+  // useEffect(() => {
+  //   const otherAttributes = mdastNode.attributes.filter(
+  //     (a) =>
+  //       a.type === "mdxJsxAttribute" &&
+  //       !["src", "alt", "caption"].includes(a.name)
+  //   );
+  //
+  //   const newAttributes = [
+  //     ...otherAttributes,
+  //     { type: "mdxJsxAttribute", name: "src", value: src },
+  //     { type: "mdxJsxAttribute", name: "alt", value: alt },
+  //   ];
+  //
+  //   if (caption) {
+  //     newAttributes.push({
+  //       type: "mdxJsxAttribute",
+  //       name: "caption",
+  //       value: caption,
+  //     });
+  //   }
+  //
+  //   updateMdastNode({ ...mdastNode, attributes: newAttributes });
+  // }, [src, alt, caption]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

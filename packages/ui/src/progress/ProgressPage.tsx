@@ -9,7 +9,7 @@ function AnimatedBar({ percentage }: { percentage: number }) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setTimeout(() => setWidth(percentage), 100);
           observer.disconnect();
         }

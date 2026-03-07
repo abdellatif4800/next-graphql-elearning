@@ -57,7 +57,10 @@ export function CreateRoadmapPage({
               dispatch(updateNode({ id: node.id, changes: node }));
             });
           }}
-          setEdges={(newEdges) => dispatch(setEdges(newEdges))}
+          setEdges={(newEdges: any) => {
+            const edgesArray = typeof newEdges === "function" ? newEdges(reduxEdges) : newEdges;
+            dispatch(setEdges(edgesArray));
+          }}
           isEditable={true}
         />
       </div>

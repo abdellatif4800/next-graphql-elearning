@@ -1,8 +1,6 @@
-// TutorialCard
-"use client"
+"use client";
 import { RootState, useAppSelector } from "@repo/reduxSetup";
 import Link from "next/link";
-import { useEffect } from "react";
 
 export function TutorialCard({ tutorial }: { tutorial: any }) {
   const { isPublic } = useAppSelector((state: RootState) => state.tutorialSlice);
@@ -28,32 +26,21 @@ export function TutorialCard({ tutorial }: { tutorial: any }) {
     : { pathname: `/tutorials/${displayData.id}` };
 
   const actionLabel = !isPublic ? "Edit" : "Read_Now";
+
   return (
     <div className="relative group">
       {/* Hard offset shadow layer */}
       <div
-        className="absolute inset-0 transition-all duration-300 group-hover:translate-x-2 group-hover:translate-y-2"
-        style={{
-          backgroundColor: "var(--surface-700)",
-          clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
-          transform: "translate(6px, 6px)",
-        }}
+        className="absolute inset-0 bg-surface-700 translate-x-[6px] translate-y-[6px] group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-300 [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,12px_100%,0_calc(100%-12px))]"
       />
 
-      <div
-        className="h-[340px] flex flex-col bg-surface-900 border border-surface-800 hover:border-teal-glow/60 transition-all duration-300 group relative overflow-hidden"
-        style={{
-          clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
-        }}
-      >
+      <div className="h-[340px] flex flex-col bg-surface-900 border border-surface-800 hover:border-teal-glow/60 transition-all duration-300 relative overflow-hidden [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,12px_100%,0_calc(100%-12px))]">
+
         {/* Hover inset glow */}
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"
-          style={{ background: "linear-gradient(135deg, rgba(45,212,191,0.04) 0%, transparent 60%)" }}
-        />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 [background:linear-gradient(135deg,rgba(45,212,191,0.04)_0%,transparent_60%)]" />
 
         {/* Bottom accent bar */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-teal-glow/80 shadow-[0_0_8px_rgba(45,212,191,0.6)] scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left z-20" />
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-teal-glow/80 shadow-glow-teal-sm scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left z-20" />
 
         {/* ── Thumbnail ── */}
         <div className="relative h-36 w-full bg-black overflow-hidden border-b border-surface-800 shrink-0">
@@ -64,12 +51,7 @@ export function TutorialCard({ tutorial }: { tutorial: any }) {
           />
 
           {/* Scanline */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px)",
-            }}
-          />
+          <div className="absolute inset-0 pointer-events-none [background:repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(0,0,0,0.15)_2px,rgba(0,0,0,0.15)_4px)]" />
 
           {/* Level badge — top right */}
           <div className="absolute top-0 right-0 z-10">
@@ -82,20 +64,12 @@ export function TutorialCard({ tutorial }: { tutorial: any }) {
           {!isPublic && (
             <div className="absolute top-0 left-0 z-10">
               {tutorial?.publish ? (
-                <span
-                  className="flex items-center gap-1.5 bg-surface-950/95 border-r border-b border-emerald-glow/40 text-[7px] font-digital font-black px-2 py-1 uppercase tracking-wider text-emerald-glow"
-                  style={{ textShadow: "0 0 6px var(--shadow-emerald)" }}
-                >
-                  <span
-                    className="w-1 h-1 bg-emerald-glow animate-pulse shrink-0"
-                    style={{ boxShadow: "0 0 4px var(--shadow-emerald)" }}
-                  />
+                <span className="flex items-center gap-1.5 bg-surface-950/95 border-r border-b border-emerald-glow/40 text-[7px] font-digital font-black px-2 py-1 uppercase tracking-wider text-emerald-glow text-glow-emerald">
+                  <span className="w-1 h-1 bg-emerald-glow animate-pulse shrink-0 shadow-glow-emerald-sm" />
                   Live
                 </span>
               ) : (
-                <span
-                  className="flex items-center gap-1.5 bg-surface-950/95 border-r border-b border-surface-600/60 text-[7px] font-digital font-black px-2 py-1 uppercase tracking-wider text-text-secondary"
-                >
+                <span className="flex items-center gap-1.5 bg-surface-950/95 border-r border-b border-surface-600/60 text-[7px] font-digital font-black px-2 py-1 uppercase tracking-wider text-text-secondary">
                   <span className="w-1 h-1 bg-surface-600 shrink-0" />
                   Draft
                 </span>
@@ -142,19 +116,9 @@ export function TutorialCard({ tutorial }: { tutorial: any }) {
 
             <Link
               href={actionLink}
-              className="
-                relative group/btn overflow-hidden
-                border border-emerald-glow/60 bg-transparent
-                text-emerald-glow text-[9px] font-digital font-black uppercase tracking-wider
-                px-4 py-1.5
-                hover:text-black transition-colors duration-200
-                active:scale-95
-              "
-              style={{
-                clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))",
-              }}
+              className="relative group/btn overflow-hidden border border-emerald-glow/60 bg-transparent text-emerald-glow text-[9px] font-digital font-black uppercase tracking-wider px-4 py-1.5 hover:text-black transition-colors duration-200 active:scale-95 [clip-path:polygon(0_0,calc(100%-6px)_0,100%_6px,100%_100%,6px_100%,0_calc(100%-6px))]"
             >
-              <span className="absolute inset-0 bg-emerald-glow translate-x-[-100%] group-hover/btn:translate-x-0 transition-transform duration-200 z-0" />
+              <span className="absolute inset-0 bg-emerald-glow -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-200 z-0" />
               <span className="relative z-10">{actionLabel}</span>
             </Link>
           </div>
@@ -163,4 +127,3 @@ export function TutorialCard({ tutorial }: { tutorial: any }) {
     </div>
   );
 }
-

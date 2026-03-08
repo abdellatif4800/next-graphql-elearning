@@ -1,10 +1,9 @@
 "use client";
 
-
 import { RootState, useAppSelector } from "@repo/reduxSetup";
 import { useState } from "react";
 
-export function TutorialsFilter({ loadFilterdData }: any) {
+export function TutorialsFilter({ loadFilterdData, onClose }: any) {
   const [tutorialName, setTutorialName] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
   const [levels, setLevels] = useState<string[]>([]);
@@ -24,16 +23,14 @@ export function TutorialsFilter({ loadFilterdData }: any) {
     );
   };
 
-  // FIX 1: Status buttons only update local state — Apply fires the query
   const handleStatusChange = (status: "PUBLISHED" | "DRAFT") => {
     setStatusFilter((prev) => (prev === status ? null : status));
   };
 
-  // FIX 2: Build publish value from current statusFilter state correctly
   const buildPublishValue = (status: "PUBLISHED" | "DRAFT" | null) => {
     if (status === "PUBLISHED") return true;
     if (status === "DRAFT") return false;
-    return undefined; // null = show all (no publish filter)
+    return undefined;
   };
 
   const handleApply = () => {
@@ -44,16 +41,11 @@ export function TutorialsFilter({ loadFilterdData }: any) {
     if (categories.length > 0) filters.categories = categories;
     if (levels.length > 0) filters.levels = levels;
 
-    // FIX 3: Only set publish if it's not "show all" — let parent/cleanFilters
-    // default it, but don't force true when user wants all
     if (publishValue !== undefined) {
       filters.publish = publishValue;
     }
-    // When publishValue is undefined (null status = show all),
-    // don't include publish key — parent cleanFilters will default to true
-    // UNLESS we explicitly want to show all. Pass a sentinel:
     if (status === null && !isPublic) {
-      filters.__showAll = true; // handled in parent cleanFilters
+      filters.__showAll = true;
     }
 
     loadFilterdData(filters);
@@ -74,22 +66,34 @@ export function TutorialsFilter({ loadFilterdData }: any) {
     (statusFilter !== "PUBLISHED" ? 1 : 0);
 
   return (
-    <aside className="w-64 lg:w-72 border border-surface-800 bg-surface-900 shrink-0 flex flex-col transition-colors duration-300 custom-shadow">
+    <aside className="w-72 h-full border-r border-surface-800 bg-surface-900 shrink-0 flex flex-col custom-shadow">
 
       {/* ── Header ── */}
       <header className="px-5 py-4 border-b border-surface-800 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="block w-0.5 h-5 bg-purple-glow shadow-[0_0_6px_rgba(168,85,247,0.6)]" />
+            <span className="block w-0.5 h-5 bg-purple-glow shadow-glow-purple-sm" />
             <h2 className="text-sm font-digital font-bold text-purple-glow tracking-wider uppercase leading-none">
               System_Filters
             </h2>
           </div>
-          {activeFilterCount > 0 && (
-            <span className="text-[8px] font-digital font-black text-black bg-teal-glow px-1.5 py-0.5 min-w-[18px] text-center">
-              {activeFilterCount}
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {activeFilterCount > 0 && (
+              <span className="text-[8px] font-digital font-black text-black bg-teal-glow px-1.5 py-0.5 min-w-[18px] text-center">
+                {activeFilterCount}
+              </span>
+            )}
+            {/* Close button — always visible since filter is always an overlay */}
+            <button
+              onClick={onClose}
+              className="text-text-secondary hover:text-teal-glow transition-colors"
+              aria-label="Close filters"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Action buttons */}
@@ -97,28 +101,18 @@ export function TutorialsFilter({ loadFilterdData }: any) {
           <button
             type="button"
             onClick={handleApply}
-            className="
-              flex-1 relative overflow-hidden group/apply
-              border border-teal-glow/50 bg-transparent
-              text-teal-glow text-[9px] font-digital font-black uppercase tracking-wider
-              py-2 transition-colors duration-200 hover:text-black
-            "
+            className="flex-1 relative overflow-hidden group/apply border border-teal-glow/50 bg-transparent text-teal-glow text-[9px] font-digital font-black uppercase tracking-wider py-2 transition-colors duration-200 hover:text-black"
           >
-            <span className="absolute inset-0 bg-teal-glow translate-x-[-100%] group-hover/apply:translate-x-0 transition-transform duration-200 z-0" />
+            <span className="absolute inset-0 bg-teal-glow -translate-x-full group-hover/apply:translate-x-0 transition-transform duration-200 z-0" />
             <span className="relative z-10">[ Apply ]</span>
           </button>
 
           <button
             type="button"
             onClick={handleReset}
-            className="
-              flex-1 relative overflow-hidden group/reset
-              border border-red-500/40 bg-transparent
-              text-red-500 text-[9px] font-digital font-black uppercase tracking-wider
-              py-2 transition-colors duration-200 hover:text-black
-            "
+            className="flex-1 relative overflow-hidden group/reset border border-red-500/40 bg-transparent text-red-500 text-[9px] font-digital font-black uppercase tracking-wider py-2 transition-colors duration-200 hover:text-black"
           >
-            <span className="absolute inset-0 bg-red-500 translate-x-[-100%] group-hover/reset:translate-x-0 transition-transform duration-200 z-0" />
+            <span className="absolute inset-0 bg-red-500 -translate-x-full group-hover/reset:translate-x-0 transition-transform duration-200 z-0" />
             <span className="relative z-10">[ Reset ]</span>
           </button>
         </div>
@@ -142,28 +136,17 @@ export function TutorialsFilter({ loadFilterdData }: any) {
                     className={`
                       flex-1 py-2 text-[9px] font-digital font-black uppercase tracking-wider
                       border transition-all duration-200
-                      ${isActive && isPublishedBtn
-                        ? "bg-emerald-glow text-black border-emerald-glow shadow-[0_0_10px_rgba(16,185,129,0.25)]"
-                        : ""}
-                      ${isActive && !isPublishedBtn
-                        ? "bg-surface-700 text-white border-surface-600 shadow-[0_0_8px_rgba(38,42,51,0.5)]"
-                        : ""}
-                      ${!isActive && isPublishedBtn
-                        ? "bg-transparent text-emerald-glow border-emerald-glow/30 hover:border-emerald-glow hover:bg-emerald-glow/10"
-                        : ""}
-                      ${!isActive && !isPublishedBtn
-                        ? "bg-transparent text-text-secondary border-surface-700 hover:border-surface-500 hover:text-white"
-                        : ""}
+                      ${isActive && isPublishedBtn ? "bg-emerald-glow text-black border-emerald-glow shadow-glow-emerald-sm" : ""}
+                      ${isActive && !isPublishedBtn ? "bg-surface-700 text-white border-surface-600" : ""}
+                      ${!isActive && isPublishedBtn ? "bg-transparent text-emerald-glow border-emerald-glow/30 hover:border-emerald-glow hover:bg-emerald-glow/10" : ""}
+                      ${!isActive && !isPublishedBtn ? "bg-transparent text-text-secondary border-surface-700 hover:border-surface-500 hover:text-white" : ""}
                     `}
                   >
-                    {isActive
-                      ? `[✓] ${isPublishedBtn ? "Live" : "Draft"}`
-                      : isPublishedBtn ? "Live" : "Draft"}
+                    {isActive ? `[✓] ${isPublishedBtn ? "Live" : "Draft"}` : isPublishedBtn ? "Live" : "Draft"}
                   </button>
                 );
               })}
             </div>
-            {/* "Show all" hint when neither is active */}
             {statusFilter === null && (
               <p className="text-[8px] font-terminal text-text-secondary opacity-40 uppercase tracking-wider text-center">
                 // showing all statuses
@@ -192,13 +175,7 @@ export function TutorialsFilter({ loadFilterdData }: any) {
         <FilterSection label="Sector_Category" accent="teal">
           <div className="flex flex-col gap-0.5">
             {["Frontend", "Backend", "DevOps", "Systems", "Security"].map((topic) => (
-              <CheckRow
-                key={topic}
-                label={topic}
-                checked={categories.includes(topic)}
-                onChange={() => handleCategoryChange(topic)}
-                color="teal"
-              />
+              <CheckRow key={topic} label={topic} checked={categories.includes(topic)} onChange={() => handleCategoryChange(topic)} color="teal" />
             ))}
           </div>
         </FilterSection>
@@ -207,13 +184,7 @@ export function TutorialsFilter({ loadFilterdData }: any) {
         <FilterSection label="Access_Level" accent="purple">
           <div className="flex flex-col gap-0.5">
             {["Beginner", "Intermediate", "Advanced", "Expert"].map((lvl) => (
-              <CheckRow
-                key={lvl}
-                label={lvl}
-                checked={levels.includes(lvl)}
-                onChange={() => handleLevelsChange(lvl)}
-                color="purple"
-              />
+              <CheckRow key={lvl} label={lvl} checked={levels.includes(lvl)} onChange={() => handleLevelsChange(lvl)} color="purple" />
             ))}
           </div>
         </FilterSection>
@@ -222,22 +193,12 @@ export function TutorialsFilter({ loadFilterdData }: any) {
         <FilterSection label="Timeline_Range" accent="teal" topBorder>
           <div className="flex flex-col gap-2">
             <div className="relative">
-              <span className="absolute left-0 top-0 bottom-0 flex items-center px-2.5 text-[9px] font-terminal text-text-secondary opacity-40 pointer-events-none">
-                FROM
-              </span>
-              <input
-                type="date"
-                className="w-full bg-surface-950 border border-surface-700 text-text-secondary text-[10px] font-terminal pl-12 pr-2 py-2 focus:border-teal-glow focus:outline-none"
-              />
+              <span className="absolute left-0 top-0 bottom-0 flex items-center px-2.5 text-[9px] font-terminal text-text-secondary opacity-40 pointer-events-none">FROM</span>
+              <input type="date" className="w-full bg-surface-950 border border-surface-700 text-text-secondary text-[10px] font-terminal pl-12 pr-2 py-2 focus:border-teal-glow focus:outline-none" />
             </div>
             <div className="relative">
-              <span className="absolute left-0 top-0 bottom-0 flex items-center px-2.5 text-[9px] font-terminal text-text-secondary opacity-40 pointer-events-none">
-                TO
-              </span>
-              <input
-                type="date"
-                className="w-full bg-surface-950 border border-surface-700 text-text-secondary text-[10px] font-terminal pl-12 pr-2 py-2 focus:border-teal-glow focus:outline-none"
-              />
+              <span className="absolute left-0 top-0 bottom-0 flex items-center px-2.5 text-[9px] font-terminal text-text-secondary opacity-40 pointer-events-none">TO</span>
+              <input type="date" className="w-full bg-surface-950 border border-surface-700 text-text-secondary text-[10px] font-terminal pl-12 pr-2 py-2 focus:border-teal-glow focus:outline-none" />
             </div>
           </div>
         </FilterSection>
@@ -248,55 +209,23 @@ export function TutorialsFilter({ loadFilterdData }: any) {
 
 /* ── Sub-components ── */
 
-function FilterSection({
-  label,
-  children,
-  topBorder = false,
-}: {
-  label: string;
-  accent?: string;
-  children: React.ReactNode;
-  topBorder?: boolean;
-}) {
+function FilterSection({ label, children, topBorder = false }: { label: string; accent?: string; children: React.ReactNode; topBorder?: boolean }) {
   return (
     <div className={`flex flex-col gap-2.5 ${topBorder ? "pt-5 border-t border-surface-800" : ""}`}>
       <div className="flex items-center gap-2">
         <span className="w-3 h-px bg-text-secondary opacity-40" />
-        <span className="text-[9px] font-terminal font-bold text-text-secondary uppercase tracking-[0.25em]">
-          {label}
-        </span>
+        <span className="text-[9px] font-terminal font-bold text-text-secondary uppercase tracking-[0.25em]">{label}</span>
       </div>
       {children}
     </div>
   );
 }
 
-function CheckRow({
-  label,
-  checked,
-  onChange,
-  color,
-}: {
-  label: string;
-  checked: boolean;
-  onChange: () => void;
-  color: "teal" | "purple";
-}) {
+function CheckRow({ label, checked, onChange, color }: { label: string; checked: boolean; onChange: () => void; color: "teal" | "purple" }) {
   const isTeal = color === "teal";
-
   return (
     <label className="flex items-center gap-3 px-2 py-1.5 cursor-pointer group hover:bg-surface-800 transition-colors">
-      <span
-        className="w-3.5 h-3.5 shrink-0 border flex items-center justify-center transition-colors duration-150"
-        style={{
-          background: checked
-            ? isTeal ? "var(--teal-glow)" : "var(--purple-glow)"
-            : "var(--surface-950)",
-          borderColor: checked
-            ? isTeal ? "var(--teal-glow)" : "var(--purple-glow)"
-            : "var(--surface-600)",
-        }}
-      >
+      <span className={`w-3.5 h-3.5 shrink-0 border flex items-center justify-center transition-colors duration-150 ${checked ? isTeal ? "bg-teal-glow border-teal-glow" : "bg-purple-glow border-purple-glow" : "bg-surface-950 border-surface-600"}`}>
         {checked && (
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
             <path d="M1.5 4L3 5.5L6.5 2" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -304,23 +233,10 @@ function CheckRow({
         )}
       </span>
       <input type="checkbox" className="sr-only" checked={checked} onChange={onChange} />
-      <span
-        className="text-[10px] font-terminal font-bold uppercase tracking-wider leading-none transition-colors duration-150"
-        style={{
-          color: checked ? (isTeal ? "var(--teal-glow)" : "var(--purple-glow)") : undefined,
-        }}
-      >
-        {!checked
-          ? <span className="text-text-secondary group-hover:text-text-primary transition-colors">{label}</span>
-          : label
-        }
+      <span className={`text-[10px] font-terminal font-bold uppercase tracking-wider leading-none transition-colors duration-150 ${checked ? isTeal ? "text-teal-glow" : "text-purple-glow" : ""}`}>
+        {!checked ? <span className="text-text-secondary group-hover:text-text-primary transition-colors">{label}</span> : label}
       </span>
-      {checked && (
-        <span
-          className="ml-auto w-1 h-1 shrink-0"
-          style={{ background: isTeal ? "var(--teal-glow)" : "var(--purple-glow)" }}
-        />
-      )}
+      {checked && <span className={`ml-auto w-1 h-1 shrink-0 ${isTeal ? "bg-teal-glow" : "bg-purple-glow"}`} />}
     </label>
   );
 }

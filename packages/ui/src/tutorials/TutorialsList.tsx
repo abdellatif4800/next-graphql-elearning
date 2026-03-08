@@ -1,15 +1,12 @@
-// TutorialsList
 "use client";
 import { TutorialCard } from "./TutorialCard";
 
 export function TutorialsList({ tutorials }: any) {
   return (
-    <div className="flex-1 overflow-y-auto custom-scrollbar relative "
-    >
+    <div className="flex-1 overflow-y-auto custom-scrollbar relative">
 
-
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 relative z-10 p-5 ">
+      {/* Grid — full width always, 4 cols on xl */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4 relative z-10 p-4 sm:p-5">
         {tutorials.map((tutorial: any, i: number) => (
           <div
             key={tutorial.id}
@@ -33,4 +30,3 @@ export function TutorialsList({ tutorials }: any) {
     </div>
   );
 }
-

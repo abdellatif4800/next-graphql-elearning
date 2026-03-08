@@ -16,7 +16,7 @@ function cleanFilters(raw: Record<string, any>) {
 
   const cleaned = Object.fromEntries(
     Object.entries(raw).filter(([k, v]) => {
-      if (k === "__showAll") return false; // strip sentinel
+      if (k === "__showAll") return false;
       if (v === undefined || v === null) return false;
       if (typeof v === "string" && v.trim() === "") return false;
       if (Array.isArray(v) && v.length === 0) return false;
@@ -24,9 +24,6 @@ function cleanFilters(raw: Record<string, any>) {
     })
   );
 
-  // Only default publish to true if:
-  // - not a "show all" request AND
-  // - publish wasn't explicitly set
   if (!showAll && cleaned.publish === undefined) {
     cleaned.publish = true;
   }
@@ -37,6 +34,7 @@ function cleanFilters(raw: Record<string, any>) {
 export function TutorialsPage({ isPublic }: { isPublic: boolean }) {
   const dispatch = useAppDispatch();
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["tutorials", filters],
@@ -55,6 +53,7 @@ export function TutorialsPage({ isPublic }: { isPublic: boolean }) {
   const handleLoadFilterdData = (filterFields: any) => {
     const cleaned = cleanFilters(filterFields);
     setFilters(cleaned);
+    setFilterOpen(false);
   };
 
   useEffect(() => {
@@ -66,12 +65,30 @@ export function TutorialsPage({ isPublic }: { isPublic: boolean }) {
   }, [data]);
 
   return (
-    <div className="h-full w-full font-terminal text-text-primary flex flex-row gap-5 overflow-hidden">
-      <TutorialsFilter loadFilterdData={handleLoadFilterdData} />
-      <div
-        className="flex-1 flex flex-col overflow-hidden relative w-full transition-colors duration-300"
-        style={{ boxShadow: "4px 4px 0px var(--surface-800)" }}
-      >
+    <div className="h-full w-full font-terminal text-text-primary flex flex-col overflow-hidden relative">
+
+      {/* ── Backdrop (all screen sizes) ── */}
+      {filterOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+          onClick={() => setFilterOpen(false)}
+        />
+      )}
+
+      {/* ── Filter — always fixed overlay from left ── */}
+      <div className={`
+        fixed top-0 left-0 h-full z-50
+        transition-transform duration-300 ease-in-out
+        ${filterOpen ? "translate-x-0" : "-translate-x-full"}
+      `}>
+        <TutorialsFilter
+          loadFilterdData={handleLoadFilterdData}
+          onClose={() => setFilterOpen(false)}
+        />
+      </div>
+
+      {/* ── Main content — always full width ── */}
+      <div className="flex-1 flex flex-col overflow-hidden w-full shadow-card transition-colors duration-300">
         {isLoading ? (
           <TutorialsListLoading />
         ) : error ? (
@@ -82,6 +99,7 @@ export function TutorialsPage({ isPublic }: { isPublic: boolean }) {
               hasMore={hasMoreItems}
               loadMore={handleLoadMore}
               tutorialsLength={tutorialsLength}
+              onOpenFilter={() => setFilterOpen(true)}
             />
             <TutorialsList tutorials={visibleTutorials} />
           </>

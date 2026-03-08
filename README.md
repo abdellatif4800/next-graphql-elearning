@@ -1,58 +1,202 @@
-# Turborepo Tailwind CSS starter
+# Root_LMS ⚡
 
-This Turborepo starter is maintained by the Turborepo core team.
+> A cyberpunk-themed, full-stack Learning Management System built as a Turborepo monorepo — featuring tutorials, roadmaps, and progress tracking with a terminal-aesthetic UI.
 
-## Using this example
+**Live Demo:** [next-graphql-elearning-dashboard.vercel.app](https://next-graphql-elearning-dashboard.vercel.app)
 
-Run the following command:
+---
 
-```sh
-npx create-turbo@latest -e with-tailwind
+## ✦ Features
+
+### Public
+
+- **Tutorial Library** — Browse all published tutorials with filtering by category, level, status, and keyword search
+- **Roadmaps** — Visual, node-based learning path viewer built with ReactFlow
+- **Tutorial Reader** — MDX-powered unit content renderer with a collapsible units sidebar
+- **Progress Tracking** — Per-unit completion tracking with animated progress bars per tutorial
+
+### Admin
+
+- **Tutorial Editor** — Create and edit tutorials with full metadata (name, description, level, category, thumbnail, publish status)
+- **Roadmap Editor** — Drag-and-drop node graph editor to build learning roadmaps by linking tutorials
+- **Unit Management** — Create and order learning units within tutorials
+- **Publish Control** — Toggle tutorials between Draft and Live status
+
+### UI/UX
+
+- **Cyberpunk / Terminal aesthetic** — Custom design system with `Orbitron` + `JetBrains Mono` fonts, cut-corner clip-paths, teal/emerald/purple glow accents, scanline overlays, and animated grid backgrounds
+- **Dark / Light theme** — Full theme toggle with CSS variable-driven theming
+- **Fully responsive** — Mobile-first layout with overlay sidebars, hamburger nav, and adaptive grids
+- **Skeleton loading states** — Shimmer skeletons matching real card layouts
+- **Portal dropdowns** — User menu and filter panels rendered via `createPortal` to escape layout stacking contexts
+
+---
+
+## ✦ Tech Stack
+
+### Monorepo
+
+| Tool                | Purpose                                 |
+| ------------------- | --------------------------------------- |
+| **Turborepo**       | Monorepo build system with task caching |
+| **pnpm workspaces** | Package management                      |
+| **TypeScript**      | End-to-end type safety                  |
+
+### Frontend (`apps/web`)
+
+| Tool                            | Purpose                                                           |
+| ------------------------------- | ----------------------------------------------------------------- |
+| **Next.js 15** (App Router)     | React framework, server components, server actions                |
+| **React 19**                    | UI library                                                        |
+| **Tailwind CSS v4**             | Utility-first styling with custom `@theme` design tokens          |
+| **Redux Toolkit**               | Global state (auth, tutorial filters, roadmap graph)              |
+| **TanStack Query**              | Server state, caching, and prefetching                            |
+| **ReactFlow (`@xyflow/react`)** | Interactive node-graph editor for roadmaps                        |
+| **next-mdx-remote**             | MDX content rendering (serialized server-side via server actions) |
+| **next-themes**                 | Dark/light mode                                                   |
+
+### Backend (`apps/server`)
+
+| Tool                     | Purpose                         |
+| ------------------------ | ------------------------------- |
+| **NestJS**               | Node.js server framework        |
+| **GraphQL** (Code First) | API layer via `@nestjs/graphql` |
+| **TypeORM**              | ORM for database access         |
+| **PostgreSQL**           | Primary database                |
+| **JWT + Cookies**        | Authentication                  |
+| **Vercel**               | Deployment                      |
+
+### Shared Packages
+
+| Package                | Contents                                                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `@repo/ui`             | All React components (TutorialsPage, TutorialCard, UnitsList, ContentArea, ProgressPageContent, RoadmapViewer, Navbar, Sidebar, etc.) |
+| `@repo/gql`            | GraphQL queries, mutations, and TanStack Query hooks                                                                                  |
+| `@repo/reduxSetup`     | Redux store, slices (auth, tutorial, roadmap)                                                                                         |
+| `@repo/mdxSetup`       | MDX components and serialization utilities                                                                                            |
+| `@repo/reactFlowSetup` | ReactFlow configuration, custom nodes, and edge types                                                                                 |
+
+---
+
+## ✦ Project Structure
+
+```
+next-graphql-elearning/
+├── apps/
+│   ├── web/                    # Next.js frontend
+│   │   └── app/
+│   │       ├── (pages)/
+│   │       │   ├── tutorials/
+│   │       │   │   ├── list/       # Tutorial browser
+│   │       │   │   ├── [tutorialId]/   # Tutorial reader
+│   │       │   │   └── tutorialEditor/ # Admin editor
+│   │       │   ├── roadmaps/       # Roadmap list
+│   │       │   │   └── [roadmapId]/    # Roadmap viewer
+│   │       │   └── progress/       # User progress dashboard
+│   │       └── layout.tsx          # Root layout with MainLayout
+│   └── server/                 # NestJS GraphQL API
+├── packages/
+│   ├── ui/                     # Shared React components
+│   ├── gql/                    # GraphQL client + queries
+│   ├── reduxSetup/             # Redux store and slices
+│   ├── mdxSetup/               # MDX rendering utilities
+│   └── reactFlowSetup/         # ReactFlow graph components
+├── turbo.json
+├── pnpm-workspace.yaml
+└── package.json
 ```
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## ✦ Getting Started
 
-### Apps and Packages
+### Prerequisites
 
-- `docs`: a [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `web`: another [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `ui`: a stub React component library with [Tailwind CSS](https://tailwindcss.com/) shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- Node.js `>=18`
+- pnpm `>=8`
+- PostgreSQL database
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Installation
 
-### Building packages/ui
+```bash
+# Clone the repo
+git clone https://github.com/abdellatif4800/next-graphql-elearning.git
+cd next-graphql-elearning
 
-This example is set up to produce compiled styles for `ui` components into the `dist` directory. The component `.tsx` files are consumed by the Next.js apps directly using `transpilePackages` in `next.config.ts`. This was chosen for several reasons:
-
-- Make sharing one `tailwind.config.ts` to apps and packages as easy as possible.
-- Make package compilation simple by only depending on the Next.js Compiler and `tailwindcss`.
-- Ensure Tailwind classes do not overwrite each other. The `ui` package uses a `ui-` prefix for it's classes.
-- Maintain clear package export boundaries.
-
-Another option is to consume `packages/ui` directly from source without building. If using this option, you will need to update the `tailwind.config.ts` in your apps to be aware of your package locations, so it can find all usages of the `tailwindcss` class names for CSS compilation.
-
-For example, in [tailwind.config.ts](packages/tailwind-config/tailwind.config.ts):
-
-```js
-  content: [
-    // app content
-    `src/**/*.{js,ts,jsx,tsx}`,
-    // include packages if not transpiling
-    "../../packages/ui/*.{js,ts,jsx,tsx}",
-  ],
+# Install dependencies
+pnpm install
 ```
 
-If you choose this strategy, you can remove the `tailwindcss` and `autoprefixer` dependencies from the `ui` package.
+### Environment Variables
 
-### Utilities
+Create `.env` files in both `apps/web` and `apps/server`:
 
-This Turborepo has some additional tools already setup for you:
+**`apps/web/.env.local`**
 
-- [Tailwind CSS](https://tailwindcss.com/) for styles
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+```env
+NEXT_PUBLIC_GRAPHQL_URL=http://localhost:3001/graphql
+```
+
+**`apps/server/.env`**
+
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/root_lms
+JWT_SECRET=your_jwt_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+```
+
+### Development
+
+```bash
+# Run all apps and packages in parallel
+pnpm dev
+
+# Run only the frontend
+pnpm --filter web dev
+
+# Run only the backend
+pnpm --filter server dev
+```
+
+The web app runs on `http://localhost:3000` and the GraphQL API on `http://localhost:3001/graphql`.
+
+### Build
+
+```bash
+pnpm build
+```
+
+---
+
+## ✦ GraphQL API Highlights
+
+| Operation                                | Description                                                      |
+| ---------------------------------------- | ---------------------------------------------------------------- |
+| `tutorials(filters)`                     | List tutorials with optional publish/level/category/name filters |
+| `tutorialById(id)`                       | Get a single tutorial with its units                             |
+| `unitsByTutorialId(id)`                  | Get all units for a tutorial                                     |
+| `unitById(id)`                           | Get a single unit with MDX content                               |
+| `roadmaps`                               | List all roadmaps                                                |
+| `roadmap(id)`                            | Get roadmap with nodes and edges                                 |
+| `unitProgressByUser(userId, tutorialId)` | Get unit completion records                                      |
+| `tutorialsInProgressByUser(userId)`      | Get all tutorials a user has started                             |
+| `createUnitProgress(input)`              | Upsert a unit completion record                                  |
+| `login / logout`                         | JWT auth via HTTP-only cookies                                   |
+
+---
+
+## ✦ Design System
+
+The UI uses a custom cyberpunk / terminal aesthetic defined in `shared-styles.css` and Tailwind's `@theme` block:
+
+- **Fonts:** `Orbitron` (headings/digital displays) · `JetBrains Mono` (body/terminal text)
+- **Colors:** `teal-glow` · `emerald-glow` · `purple-glow` · `surface-950/900/800/700`
+- **Shadows:** `shadow-card` (4px hard offset) · `shadow-glow-teal/emerald/purple`
+- **Shapes:** `clip-path` cut-corner polygons on cards, buttons, and panels
+- **Motion:** `fadeSlideIn` stagger animations · `shimmer` skeleton sweeps · intersection-observer animated progress bars
+
+---
+
+## ✦ License
+
+MIT

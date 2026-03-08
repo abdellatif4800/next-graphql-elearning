@@ -46,7 +46,7 @@ export function ContentArea({
 
         {/* Back button — goes to previous route */}
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push('/')}
           className="
             group flex items-center gap-1.5
             border border-surface-700 bg-surface-950

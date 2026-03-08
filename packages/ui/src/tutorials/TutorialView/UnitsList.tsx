@@ -11,6 +11,7 @@ import {
 } from "@repo/gql";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
+import { RootState, useAppSelector } from "@repo/reduxSetup";
 
 export function UnitsList({
   firstUnit,
@@ -19,8 +20,11 @@ export function UnitsList({
   firstUnit?: string;
   onClose?: () => void;
 }) {
-  const userId = "c3b67ca3-44a1-4f05-a511-980758b24176";
   const queryClient = useQueryClient();
+
+  // ── Read userId from Redux auth state (populated at login) ──
+  const { user } = useAppSelector((state: RootState) => state.authSlice);
+  const userId = user?.sub ?? "";
 
   const params = useParams();
   const searchParams = useSearchParams();
@@ -32,11 +36,14 @@ export function UnitsList({
   const { data: progressData, isLoading: progressLoading, error: progressError } = useQuery({
     queryKey: ["unitProgress", userId, tutorialId],
     queryFn: () => getAllUnitProgressByTutorialAndUser(userId, tutorialId),
+    // ── Guard: don't fire until we have a real userId ──
+    enabled: !!userId && !!tutorialId,
   });
 
   const { data: tutorialData, isLoading: tutorialLoading, error: tutorialError } = useQuery({
     queryKey: ["tutorialById"],
     queryFn: () => getUnitsByTutorialId(tutorialId),
+    enabled: !!tutorialId,
   });
 
   const mutation = useMutation({
@@ -138,12 +145,10 @@ export function UnitsList({
                     }
                   `}
                 >
-                  {/* Index */}
                   <span className={`shrink-0 w-5 text-[8px] font-digital font-black text-right ${isActive ? "text-teal-glow" : "text-text-secondary opacity-30"}`}>
                     {String(index + 1).padStart(2, "0")}
                   </span>
 
-                  {/* Unit link */}
                   <Link
                     href={{ pathname: `/tutorials/${tutorialId}`, query: { unitId: unit.id } }}
                     className="flex items-center gap-2 flex-1 min-w-0"
@@ -161,28 +166,32 @@ export function UnitsList({
                     </span>
                   </Link>
 
-                  {/* ── Complete toggle button — always visible ── */}
-                  <button
-                    title={isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
-                    disabled={isPending}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // upsert: toggle isCompleted regardless of whether record exists
-                      mutation.mutate({ userId, unitId: unit.id, isCompleted: !isCompleted });
-                    }}
-                    className={`
-                      shrink-0 w-5 h-5 flex items-center justify-center
-                      border transition-all duration-150 text-[8px] font-digital
-                      disabled:opacity-40 disabled:cursor-not-allowed
-                      ${isCompleted
-                        ? "bg-emerald-glow/20 border-emerald-glow text-emerald-glow [box-shadow:0_0_6px_var(--shadow-emerald)]"
-                        : "border-surface-600 text-surface-500 hover:border-teal-glow hover:text-teal-glow"
-                      }
-                      ${isPending ? "animate-pulse" : ""}
-                    `}
-                  >
-                    {isPending ? "·" : isCompleted ? "✓" : "○"}
-                  </button>
+                  {/* Complete toggle — only shown when logged in */}
+                  {userId ? (
+                    <button
+                      title={isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
+                      disabled={isPending}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        mutation.mutate({ userId, unitId: unit.id, isCompleted: !isCompleted });
+                      }}
+                      className={`
+                        shrink-0 w-5 h-5 flex items-center justify-center
+                        border transition-all duration-150 text-[8px] font-digital
+                        disabled:opacity-40 disabled:cursor-not-allowed
+                        ${isCompleted
+                          ? "bg-emerald-glow/20 border-emerald-glow text-emerald-glow [box-shadow:0_0_6px_var(--shadow-emerald)]"
+                          : "border-surface-600 text-surface-500 hover:border-teal-glow hover:text-teal-glow"
+                        }
+                        ${isPending ? "animate-pulse" : ""}
+                      `}
+                    >
+                      {isPending ? "·" : isCompleted ? "✓" : "○"}
+                    </button>
+                  ) : (
+                    // Placeholder to keep layout stable when not logged in
+                    <span className="shrink-0 w-5 h-5" />
+                  )}
                 </div>
               );
             })}

@@ -28,9 +28,9 @@ export default function MainLayoutClient({
   useEffect(() => {
     async function fetchUser() {
       try {
-        const { data, errors } = await meQuery.refetch();
+        const { data } = await meQuery.refetch();
 
-        if (errors || !data?.me) {
+        if (!data?.me) {
           dispatch(setUnAuthorized());
           return;
         }
